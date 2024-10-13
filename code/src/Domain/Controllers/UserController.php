@@ -108,7 +108,7 @@ class UserController extends AbstractController
         return $render->renderPageWithForm(
             'user-form.tpl',
             [
-                'title' => 'Форма создания пользователя',
+                'title' => 'Форма обновления пользователя',
                 'action' => '/user/update/?user_id=' . $_GET['user_id'],
                 'user' => $user[0]
             ]
@@ -122,14 +122,19 @@ class UserController extends AbstractController
         return $render->renderPageWithForm(
             'user-auth.tpl',
             [
-                'title' => 'Форма логина'
+                'title' => 'Форма логина',
+                'auth_error' => null,
             ]
         );
     }
 
     public function actionHash(): string
     {
-        return Auth::getPasswordHash($_GET['pass_string']);
+        if (isset($_GET['pass_string']) && !empty($_GET['pass_string'])) {
+            return Auth::getPasswordHash($_GET['pass_string']);
+        } else {
+            throw new \Exception('Не возможно сгенерировать хэш, т.к. не переданы данные для генерации');
+        }
     }
 
     public function actionLogin(): string
@@ -142,13 +147,12 @@ class UserController extends AbstractController
 
         if (!$result) {
             $render = new Render();
-
             return $render->renderPageWithForm(
                 'user-auth.tpl',
                 [
                     'title' => 'Форма логина',
-                    'auth-success' => false,
-                    'auth-error' => 'Неверные логин или пароль'
+                    'auth_error' => true,
+                    'error_msg' => 'Неверные логин или пароль'
                 ]
             );
         } else {

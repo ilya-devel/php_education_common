@@ -17,7 +17,8 @@ class Render
     {
         $this->loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . $this->viewFolder);
         $this->environment = new Environment($this->loader, [
-            'cache' => $_SERVER['DOCUMENT_ROOT'] . '/cache/',
+            // 'cache' => $_SERVER['DOCUMENT_ROOT'] . '/cache/',
+            'cache' => false,
         ]);
     }
 
@@ -31,6 +32,16 @@ class Render
             $templateVariables['user_authorized'] = true;
             $templateVariables['user_name'] = $_COOKIE['user_name'];
         }
+
+        // // temp code
+        // ob_start();
+        // \xdebug_info();
+        // $xdebug = ob_get_clean();
+
+        // $templateVariables['xdebug'] = $xdebug;
+
+
+        // // ----
 
         return $template->render($templateVariables);
     }

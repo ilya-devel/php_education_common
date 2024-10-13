@@ -1,0 +1,2 @@
+[2024-10-12T17:49:47.691812+00:00] application_logger.ERROR: GET Метод actionSum не существует в контроллере Geekbrains\Application1\Domain\Controllers\UserController | Попытка вызова адреса /user/sum [] []
+[2024-10-12T18:00:59.507526+00:00] application_logger.ERROR: GET Метод actionSum не существует в контроллере Geekbrains\Application1\Domain\Controllers\UserController | Попытка вызова адреса /user/sum [] []

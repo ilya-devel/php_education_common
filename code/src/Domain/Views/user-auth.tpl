@@ -1,6 +1,7 @@
-{% if not auth-success %}
-  {{ auth-error }}
+{% if auth_error is not null and auth_error %}
+  <p>{{ error_msg }}</p>
 {% endif %}
+
 
 
 <form action="/user/login/" method="post">
