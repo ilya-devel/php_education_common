@@ -15,18 +15,30 @@ class UserController extends AbstractController
         'actionSave' => ['admin']
     ];
 
+    private function checkIsAdmin(): bool
+    {
+        $roles = $this->getUserRoles();
+        if (empty($roles)) {
+            return false;
+        }
+        return in_array('admin', $roles);
+    }
+
     public function actionIndex(): string
     {
         $users = User::getAllUsersFromStorage();
 
         $render = new Render();
 
+        $isAdmin = $this->checkIsAdmin();
+
         if (!$users) {
             return $render->renderPage(
                 'user-empty.tpl',
                 [
                     'title' => 'Список пользователей в хранилище',
-                    'message' => "Список пуст или не найден"
+                    'message' => "Список пуст или не найден",
+                    'isAdmin' => $isAdmin
                 ]
             );
         } else {
@@ -34,7 +46,8 @@ class UserController extends AbstractController
                 'user-index.tpl',
                 [
                     'title' => 'Список пользователей в хранилище',
-                    'users' => $users
+                    'users' => $users,
+                    'isAdmin' => $isAdmin
                 ]
             );
         }
@@ -166,5 +179,40 @@ class UserController extends AbstractController
         setcookie('user_name', '', time() - 1000, '/');
         header('Location: /');
         return '';
+    }
+
+    public function actionIndexRefresh()
+    {
+        $users = User::getAllUsersFromStorage();
+        $userData = [];
+
+        foreach ($users as $user) {
+            $userTmpData = $user->getUserAsArray();
+            if ($this->checkIsAdmin()) {
+                $userTmpData['useredit'] = '/user/edit/?user_id=' . $user->getUserId();
+                $userTmpData['userremove'] = '/user/remove/?user_id=' . $user->getUserId();
+            }
+            $userData[] = $userTmpData;
+        }
+
+        return json_encode($userData);
+    }
+
+    public function actionRemove()
+    {
+        if (!$this->checkIsAdmin()) {
+            return "Вы не имеете прав на удаление";
+        }
+        if (isset($_GET['user_id'])) {
+            $result = User::removeUserFromStorage($_GET['user_id']);
+            if (empty($result)) {
+                return "Пользователь не найден";
+            } else {
+                header('Location: /user/index/');
+                return '';
+            }
+        } else {
+            return "Не указан ID пользователя для удаления";
+        }
     }
 }

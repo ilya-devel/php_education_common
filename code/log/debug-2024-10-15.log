@@ -1,0 +1,2 @@
+[2024-10-15T06:39:00.672428+00:00] application_logger.ERROR: GET Метод actionHash?pass_string=user не существует в контроллере Geekbrains\Application1\Domain\Controllers\UserController | Попытка вызова адреса /user/hash?pass_string=user [] []
+[2024-10-15T06:40:05.372402+00:00] application_logger.ERROR: GET Метод actionHash?pass_string=user не существует в контроллере Geekbrains\Application1\Domain\Controllers\UserController | Попытка вызова адреса /user/hash?pass_string=user [] []
